@@ -28,6 +28,7 @@ headers = {
 async def chat(request: Request):
     body = await request.json()
     stream = body.get("stream", False)
+    print(f"stream: {stream}")
 
     if not stream:
         # 비스트리밍 요청
