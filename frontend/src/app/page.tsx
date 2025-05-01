@@ -1,7 +1,12 @@
 "use client";
 
-import { marked } from "marked";
-import { useState } from "react";
+import SystemPromptInput from "../components/SystemPromptInput";
+import UserPromptInput from "../components/UserPromptInput";
+import StreamToggle from "../components/StreamToggle";
+import ResponseViewer from "../components/ResponseViewer";
+import PromptSaver from "../components/PromptSaver";
+
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const [systemPrompt, setSystemPrompt] = useState("");
@@ -83,34 +88,9 @@ export default function Home() {
 
   return (
     <main style={{ padding: "2rem" }}>
-      <h1>시스템 프롬프트</h1>
-      <textarea
-        placeholder="(예) 당신은 매우 정중한 비서입니다."
-        value={systemPrompt}
-        onChange={(e) => setSystemPrompt(e.target.value)}
-        style={{ width: "100%", height: "150px" }}
-        // shift + enter로 전송
-        onKeyDown={(e) => {
-          if (e.shiftKey && e.key === "Enter") {
-            e.preventDefault(); // 줄바꿈 방지
-            sendPrompt();
-          }
-        }}
-      />
-      <h1>사용자 입력</h1>
-      <textarea
-        placeholder="Write your prompt here..."
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        style={{ width: "100%", height: "150px" }}
-        // shift + enter로 전송
-        onKeyDown={(e) => {
-          if (e.shiftKey && e.key === "Enter") {
-            e.preventDefault(); // 줄바꿈 방지
-            sendPrompt();
-          }
-        }}
-      />
+      <SystemPromptInput value={systemPrompt} onChange={setSystemPrompt} sendPrompt={sendPrompt} />
+      <UserPromptInput value={prompt} onChange={setPrompt} sendPrompt={sendPrompt} />
+      
       <p style={{ fontSize: "0.9rem", color: "#888" }}>
       Shift + Enter 를 눌러 전송할 수 있습니다.
       </p>
@@ -125,83 +105,20 @@ export default function Home() {
           onChange={(e) => setTemperature(parseFloat(e.target.value))}
         />
       </div>
-      <div style={{ marginTop: "1rem" }}>
-        <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span>스트리밍 응답 사용</span>
-          <div
-            onClick={() => setUseStream(!useStream)}
-            style={{
-              width: "50px",
-              height: "28px",
-              borderRadius: "9999px",
-              backgroundColor: useStream ? "#4CAF50" : "#ccc",
-              position: "relative",
-              cursor: "pointer",
-              transition: "background-color 0.3s",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                top: "3px",
-                left: useStream ? "26px" : "3px",
-                width: "22px",
-                height: "22px",
-                borderRadius: "50%",
-                backgroundColor: "white",
-                transition: "left 0.3s",
-              }}
-            />
-          </div>
-        </label>
-      </div>
+      <StreamToggle value={useStream} onToggle={() => setUseStream(!useStream)} />
       <button style={{ marginTop: "1rem" }} onClick={sendPrompt}>
         전송
       </button>
-      <div style={{ marginTop: "2rem", whiteSpace: "pre-wrap" }}>
-        <h2>인공지능 답변:</h2>
-        <div
-          dangerouslySetInnerHTML={{ __html: marked.parse(response) }}
-          // dangerouslySetInnerHTML={{
-          //   __html: useStream ? response : marked.parse(response)
-          // }}
-          style={{
-            padding: "1rem",
-            borderRadius: "8px",
-            whiteSpace: "pre-wrap",
-          }}
-        />
-      </div>
-      <button onClick={saveCurrentPrompt}>저장</button>
-
-      <div style={{ marginTop: "1rem" }}>
-        <h3>저장된 프롬프트</h3>
-        <ul>
-          {savedPrompts.map(item => (
-            <li key={item.id} style={{ marginBottom: "0.5rem" }}>
-              <button
-                onClick={() => {
-                  setSystemPrompt(item.system);
-                  setPrompt(item.user);
-                }}
-              >
-                불러오기
-              </button>
-              <span style={{ marginLeft: "1rem" }}>{item.user.slice(0, 30)}...</span>
-              <button
-                style={{ marginLeft: "1rem", color: "red" }}
-                onClick={() => {
-                  const newList = savedPrompts.filter(p => p.id !== item.id);
-                  setSavedPrompts(newList);
-                  localStorage.setItem("promptList", JSON.stringify(newList));
-                }}
-              >
-                삭제
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ResponseViewer content={response} renderMarkdown={true} />
+      
+      <PromptSaver
+        current={{ system: systemPrompt, user: prompt }}
+        onLoad={(system, user) => {
+          setSystemPrompt(system);
+          setPrompt(user);
+        }
+        }
+      />
     </main>
   );
 }
