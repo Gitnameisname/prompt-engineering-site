@@ -26,6 +26,10 @@ export default function PromptSaver({ current, onLoad }: Props) {
   const savePrompt = () => {
     const systemText = current.system.trim();
     const userText = current.user.trim();
+    const name = userText || systemText || "이름 없는 프롬프트";
+
+    // 저장 전에 간단한 alert로 확인
+    if (!window.confirm(`"${name}" 프롬프트를 저장하시겠습니까?`)) return;
     
     // 둘 다 비어있으면 저장 안 함
     if (!systemText && !userText) return;
@@ -56,21 +60,23 @@ export default function PromptSaver({ current, onLoad }: Props) {
         {savedPrompts.map((item) => (
           <li key={item.id} style={{ marginBottom: "0.75rem" }}>
             <div>
-              <strong>System:</strong> {item.system.slice(0, 20) || "(없음)"}
+                <strong>System:</strong>{" "}
+                {item.system ? item.system.slice(0, 30) : "(없음)"}
             </div>
             <div>
-              <strong>User:</strong> {item.user.slice(0, 50)}...
+                <strong>User:</strong>{" "}
+                {item.user ? item.user.slice(0, 50) : <em style={{ color: "#888" }}>이름 없는 프롬프트</em>}
             </div>
             <div style={{ marginTop: "0.25rem" }}>
-              <button onClick={() => onLoad(item.system, item.user)}>불러오기</button>
-              <button
+                <button onClick={() => onLoad(item.system, item.user)}>불러오기</button>
+                <button
                 onClick={() => deletePrompt(item.id)}
                 style={{ marginLeft: "1rem", color: "red" }}
-              >
+                >
                 삭제
-              </button>
+                </button>
             </div>
-          </li>
+            </li>
         ))}
       </ul>
     </div>
