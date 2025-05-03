@@ -109,7 +109,7 @@ export default function Home() {
       <button style={{ marginTop: "1rem" }} onClick={sendPrompt}>
         전송
       </button>
-      <ResponseViewer content={response} renderMarkdown={true} />
+      <ResponseViewer content={response} renderMarkdown={true} isStreaming={useStream} />
       
       <PromptSaver
         current={{ system: systemPrompt, user: prompt }}
