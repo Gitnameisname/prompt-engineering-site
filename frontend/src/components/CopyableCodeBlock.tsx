@@ -1,3 +1,4 @@
+import { useTheme } from "./ThemeContext";
 import { useState, useEffect } from "react";
 
 type Props = {
@@ -34,9 +35,10 @@ function extractText(children: any): string {
   return "";
 }
 
-export default function CopyableCodeBlock({ language, value }: { language?: string; value: string }) {
+export default function CopyableCodeBlock({ language, value }: { language?: string; value: any }) {
   const [copied, setCopied] = useState(false);
   const rawText = extractText(value); // 텍스트 추출
+  // 내부에서 theme 설정 제거
 
   // 테스트용
   useEffect(() => {

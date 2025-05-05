@@ -5,6 +5,8 @@ import UserPromptInput from "../components/UserPromptInput";
 import StreamToggle from "../components/StreamToggle";
 import ResponseViewer from "../components/ResponseViewer";
 import PromptSaver from "../components/PromptSaver";
+import { ThemeProvider } from "../components/ThemeContext";
+import ThemeSelector from "../components/ThemeSelector";
 
 import { useState, useEffect } from "react";
 
@@ -52,8 +54,9 @@ export default function Home() {
       // 콘솔에 응답 출력
       setResponse(data.choices[0].message.content);
     } else {
-      console.log("data", res.body);
-      const reader = res.body.getReader();
+
+      const reader = res.body? res.body.getReader() : null;
+
       if (!reader) {
         console.error("Response body is null.");
         return;
@@ -87,38 +90,41 @@ export default function Home() {
   }  
 
   return (
-    <main style={{ padding: "2rem" }}>
-      <SystemPromptInput value={systemPrompt} onChange={setSystemPrompt} sendPrompt={sendPrompt} />
-      <UserPromptInput value={prompt} onChange={setPrompt} sendPrompt={sendPrompt} />
-      
-      <p style={{ fontSize: "0.9rem", color: "#888" }}>
-      Shift + Enter 를 눌러 전송할 수 있습니다.
-      </p>
-      <div style={{ marginTop: "1rem" }}>
-        <label>Temperature: {temperature}</label>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={temperature}
-          onChange={(e) => setTemperature(parseFloat(e.target.value))}
+    <ThemeProvider>
+      <main style={{ padding: "2rem" }}>
+        <ThemeSelector />
+        <SystemPromptInput value={systemPrompt} onChange={setSystemPrompt} sendPrompt={sendPrompt} />
+        <UserPromptInput value={prompt} onChange={setPrompt} sendPrompt={sendPrompt} />
+        
+        <p style={{ fontSize: "0.9rem", color: "#888" }}>
+        Shift + Enter 를 눌러 전송할 수 있습니다.
+        </p>
+        <div style={{ marginTop: "1rem" }}>
+          <label>Temperature: {temperature}</label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={temperature}
+            onChange={(e) => setTemperature(parseFloat(e.target.value))}
+          />
+        </div>
+        <StreamToggle value={useStream} onToggle={() => setUseStream(!useStream)} />
+        <button style={{ marginTop: "1rem" }} onClick={sendPrompt}>
+          전송
+        </button>
+        <ResponseViewer content={response} />
+        
+        <PromptSaver
+          current={{ system: systemPrompt, user: prompt }}
+          onLoad={(system, user) => {
+            setSystemPrompt(system);
+            setPrompt(user);
+          }
+          }
         />
-      </div>
-      <StreamToggle value={useStream} onToggle={() => setUseStream(!useStream)} />
-      <button style={{ marginTop: "1rem" }} onClick={sendPrompt}>
-        전송
-      </button>
-      <ResponseViewer content={response} renderMarkdown={true} isStreaming={useStream} />
-      
-      <PromptSaver
-        current={{ system: systemPrompt, user: prompt }}
-        onLoad={(system, user) => {
-          setSystemPrompt(system);
-          setPrompt(user);
-        }
-        }
-      />
-    </main>
+      </main>
+    </ThemeProvider>
   );
 }

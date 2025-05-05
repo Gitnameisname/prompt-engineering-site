@@ -24,6 +24,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  background-color: var(--background);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -39,4 +45,15 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+/* 예: globals.css or index.css */
+[data-theme="light"] {
+  --background: #ffffff;
+  --text: #000000;
+}
+
+[data-theme="black"] {
+  --background: #0d1117;
+  --text: #ffffff;
 }
