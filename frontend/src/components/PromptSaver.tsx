@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "../css/PromptSaver.css";
 
 type PromptItem = {
     id: number;
@@ -53,32 +54,36 @@ export default function PromptSaver({ current, onLoad }: Props) {
   };
 
   return (
-    <div style={{ marginTop: "2rem" }}>
-      <h3>저장된 프롬프트</h3>
-      <button onClick={savePrompt}>현재 프롬프트 저장</button>
-      <ul style={{ marginTop: "1rem", paddingLeft: "1rem" }}>
+    <div className="prompt-saver">
+      <h2>저장된 프롬프트</h2>
+      <div className="prompt-list">
         {savedPrompts.map((item) => (
-          <li key={item.id} style={{ marginBottom: "0.75rem" }}>
-            <div>
-                <strong>System:</strong>{" "}
-                {item.system ? item.system.slice(0, 30) : "(없음)"}
+          <div key={item.id} className="prompt-card-body">
+            <div
+              
+              className="prompt-card"
+              onClick={() => onLoad(item.system, item.user)}
+            >
+              <div className="prompt-card-section">
+                <strong>System:</strong>
+                <p>{item.system || "(비어 있음)"}</p>
+              </div>
+              <div className="prompt-card-section">
+                <strong>User:</strong>
+                <p>{item.user || "(비어 있음)"}</p>
+              </div>
+              <div className="delte-btn-container">
+                  {/* 삭제 버튼 */}
+                  <button className="delete-btn"
+                  onClick={() => deletePrompt(item.id)}
+                  >
+                  삭제
+                  </button>
+                </div>
             </div>
-            <div>
-                <strong>User:</strong>{" "}
-                {item.user ? item.user.slice(0, 50) : <em style={{ color: "#888" }}>이름 없는 프롬프트</em>}
-            </div>
-            <div style={{ marginTop: "0.25rem" }}>
-                <button onClick={() => onLoad(item.system, item.user)}>불러오기</button>
-                <button
-                onClick={() => deletePrompt(item.id)}
-                style={{ marginLeft: "1rem", color: "red" }}
-                >
-                삭제
-                </button>
-            </div>
-            </li>
+          </div>  
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

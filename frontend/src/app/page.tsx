@@ -91,40 +91,48 @@ export default function Home() {
 
   return (
     <ThemeProvider>
-      <main style={{ padding: "2rem" }}>
-        <ThemeSelector />
-        <SystemPromptInput value={systemPrompt} onChange={setSystemPrompt} sendPrompt={sendPrompt} />
-        <UserPromptInput value={prompt} onChange={setPrompt} sendPrompt={sendPrompt} />
-        
-        <p style={{ fontSize: "0.9rem", color: "#888" }}>
-        Shift + Enter 를 눌러 전송할 수 있습니다.
-        </p>
-        <div style={{ marginTop: "1rem" }}>
-          <label>Temperature: {temperature}</label>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={temperature}
-            onChange={(e) => setTemperature(parseFloat(e.target.value))}
-          />
+      <div className="page">
+        {/* 헤더 */}
+        <header className="header">
+          <h1>프롬프트 엔지니어링 놀이터</h1>
+          <ThemeSelector />
+        </header>
+        {/* 좌측: 저장된 프롬프트 / 중앙: 입력창 및 응답 */}
+        <div className="layout">
+          <aside className="sidebar">
+            <PromptSaver
+              current={{ system: systemPrompt, user: prompt }}
+              onLoad={(system, user) => {
+                setSystemPrompt(system);
+                setPrompt(user);
+              }}
+            />
+          </aside>
+          <main className="main">
+            <SystemPromptInput value={systemPrompt} onChange={setSystemPrompt} sendPrompt={sendPrompt} />
+            <UserPromptInput value={prompt} onChange={setPrompt} sendPrompt={sendPrompt} />
+            
+            <p className="hint-text">Shift + Enter 를 눌러 전송할 수 있습니다.</p>
+            <div className="temperature-slider">
+              <label>Temperature: {temperature}</label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={temperature}
+                onChange={(e) => setTemperature(parseFloat(e.target.value))}
+              />
+            </div>
+  
+            <StreamToggle value={useStream} onToggle={() => setUseStream(!useStream)} />
+            <button className="send-btn" onClick={sendPrompt}>전송</button>
+  
+            <ResponseViewer content={response} />
+  
+          </main>
         </div>
-        <StreamToggle value={useStream} onToggle={() => setUseStream(!useStream)} />
-        <button style={{ marginTop: "1rem" }} onClick={sendPrompt}>
-          전송
-        </button>
-        <ResponseViewer content={response} />
-        
-        <PromptSaver
-          current={{ system: systemPrompt, user: prompt }}
-          onLoad={(system, user) => {
-            setSystemPrompt(system);
-            setPrompt(user);
-          }
-          }
-        />
-      </main>
+      </div>
     </ThemeProvider>
   );
 }
