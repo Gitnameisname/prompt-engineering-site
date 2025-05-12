@@ -51,7 +51,10 @@ export default function LLMControls({
     return (
         <div className="llm-controls">
             <div className="llm-controls-section">
-                <label>Temperature</label>
+                <label className="llm-controls-label">
+                    Temperature
+                    <span className="llm-tooltip-icon" title="출력의 랜덤성. 높을수록 창의적, 낮을수록 결정적 응답.">💡</span>
+                </label>
                 <div className="llm-slider-group">
                     <input
                         type="range"
@@ -98,7 +101,10 @@ export default function LLMControls({
             </div>
 
             <div className="llm-controls-section">
-                <label>Top-p</label>
+                <label>
+                    Top-p
+                    <span className="llm-tooltip-icon" title="누적 확률 기반 토큰 필터링. 1.0이면 전체 사용.">💡</span>
+                </label>
                 <div className="llm-slider-group">
                     <input
                         type="range"
@@ -123,7 +129,7 @@ export default function LLMControls({
                         }}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                            const v = parseFloat(tempInput);
+                            const v = parseFloat(topPInput);
                             const safe = isNaN(v)
                                 ? topP
                                 : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
@@ -132,7 +138,7 @@ export default function LLMControls({
                             }
                         }}
                         onBlur={() => {
-                            const v = parseFloat(tempInput);
+                            const v = parseFloat(topPInput);
                             const safe = isNaN(v)
                                 ? topP
                                 : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
@@ -145,7 +151,10 @@ export default function LLMControls({
             </div>
 
             <div className="llm-controls-section">
-                <label>Presence Penalty</label>
+                <label>
+                    Presence Penalty
+                    <span className="llm-tooltip-icon" title="응답 길이 제한. 너무 작으면 잘리며, 너무 크면 느려짐.">💡</span>
+                </label>
                 <div className="llm-slider-group">
                     <input
                         type="range"
@@ -170,7 +179,7 @@ export default function LLMControls({
                         }}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                            const v = parseFloat(tempInput);
+                            const v = parseFloat(presencePenaltyInput);
                             const safe = isNaN(v)
                                 ? MIN_TOP_P
                                 : Math.max(MIN_PRESENCE_PENALTY, Math.min(MAX_TOP_P, v));
@@ -179,7 +188,7 @@ export default function LLMControls({
                             }
                         }}
                         onBlur={() => {
-                            const v = parseFloat(tempInput);
+                            const v = parseFloat(presencePenaltyInput);
                             const safe = isNaN(v)
                                 ? MIN_TOP_P
                                 : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
@@ -192,7 +201,10 @@ export default function LLMControls({
             </div>
 
             <div className="llm-controls-section">
-                <label>Max Tokens</label>
+                <label>
+                    Max Tokens
+                    <span className="llm-tooltip-icon" title="등장한 단어에 페널티 부여. 새 주제 유도.">💡</span>
+                </label>
                 <input
                     type="number"
                     min={MIN_TOKEN_LIMIT}
@@ -211,7 +223,10 @@ export default function LLMControls({
             </div>
 
             <div className="llm-controls-section">
-                <span>스트리밍</span>
+                <span>
+                    스트리밍
+                    <span className="llm-tooltip-icon" title="응답을 실시간으로 점진적으로 출력. 대화형 UI에 적합.">💡</span>
+                </span>
                 <div
                 onClick={onStreamToggle}
                 style={{

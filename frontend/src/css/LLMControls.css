@@ -13,6 +13,13 @@
     font-weight: 500;
     margin-bottom: 0.5rem;
 }
+
+.llm-tooltip-icon {
+    margin-left: 6px;
+    cursor: help;
+    font-size: 1rem;
+    color: var(--muted-foreground, #888);
+  }  
   
 .llm-controls-section {
     display: flex;
