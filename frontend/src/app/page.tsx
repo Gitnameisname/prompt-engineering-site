@@ -7,6 +7,7 @@ import ResponseViewer from "../components/ResponseViewer";
 import PromptSaver from "../components/PromptSaver";
 import { ThemeProvider } from "../components/ThemeContext";
 import ThemeSelector from "../components/ThemeSelector";
+import LLMControls from "@/components/LLMControls";
 
 import { useState, useEffect } from "react";
 
@@ -14,21 +15,26 @@ export default function Home() {
   const [systemPrompt, setSystemPrompt] = useState("");
   const [prompt, setPrompt] = useState("");
   const [temperature, setTemperature] = useState(0.7);
+  const [topP, setTopP] = useState(0.6);
+  const [maxTokens, setMaxTokens] = useState(2048);
+  const [presencePenalty, setPresencePenalty] = useState(0);
   const [response, setResponse] = useState("");
-  const [useStream, setUseStream] = useState(false);
-  const [savedPrompts, setSavedPrompts] = useState<{ id: number; system: string; user: string }[]>([]);
+  const [useStream, setUseStream] = useState(true);
+  const [savedPrompts, setSavedPrompts] = useState<{
+    id: number;
+    name: string;
+    system: string;
+    user: string;
+    date: string;
+  }[]>([]);
 
-  function saveCurrentPrompt() {
-    const item = {
-      id: Date.now(),
-      system: systemPrompt,
-      user: prompt,
-    };
-  
-    const newList = [...savedPrompts, item];
-    setSavedPrompts(newList);
-    localStorage.setItem("promptList", JSON.stringify(newList));
-  }
+  // 초기 로드
+  useEffect(() => {
+    const stored = localStorage.getItem("promptList");
+    if (stored) {
+      setSavedPrompts(JSON.parse(stored));
+    }
+  }, []);
 
   async function sendPrompt() {
     setResponse("");  // 초기화
@@ -40,6 +46,9 @@ export default function Home() {
         { role: "user", content: prompt },
       ],
       temperature: temperature,
+      top_p: topP,
+      max_tokens: maxTokens,
+      presence_penalty: presencePenalty,
       stream: useStream,  // 스트리밍 여부 포함
     };
   
@@ -52,6 +61,7 @@ export default function Home() {
     if (!useStream) {
       const data = await res.json();
       // 콘솔에 응답 출력
+      console.log("Response:", data);
       setResponse(data.choices[0].message.content);
     } else {
 
@@ -102,9 +112,10 @@ export default function Home() {
           <aside className="sidebar">
             <PromptSaver
               current={{ system: systemPrompt, user: prompt }}
-              onLoad={(system, user) => {
+              savedPrompts={savedPrompts}
+              setSavedPrompts={setSavedPrompts}
+              onLoad={(system) => {
                 setSystemPrompt(system);
-                setPrompt(user);
               }}
             />
           </aside>
@@ -112,21 +123,18 @@ export default function Home() {
             <SystemPromptInput value={systemPrompt} onChange={setSystemPrompt} sendPrompt={sendPrompt} />
             <UserPromptInput value={prompt} onChange={setPrompt} sendPrompt={sendPrompt} />
             
-            <p className="hint-text">Shift + Enter 를 눌러 전송할 수 있습니다.</p>
-            <div className="temperature-slider">
-              <label>Temperature: {temperature}</label>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={temperature}
-                onChange={(e) => setTemperature(parseFloat(e.target.value))}
-              />
+            <div className="send-btn-container">
+              <p className="hint-text">Shift + Enter 를 눌러 전송할 수 있습니다.</p>
+              <button className="send-btn" onClick={sendPrompt}>전송</button>
             </div>
-  
-            <StreamToggle value={useStream} onToggle={() => setUseStream(!useStream)} />
-            <button className="send-btn" onClick={sendPrompt}>전송</button>
+            
+            <LLMControls
+              temperature={temperature} onTemperatureChange={setTemperature}
+              topP={topP} onTopPChange={setTopP}
+              maxTokens={maxTokens} onMaxTokensChange={setMaxTokens}
+              presencePenalty={presencePenalty} onPresencePenaltyChange={setPresencePenalty}
+              useStream={useStream} onStreamToggle={() => setUseStream(!useStream)}
+            />
   
             <ResponseViewer content={response} />
   

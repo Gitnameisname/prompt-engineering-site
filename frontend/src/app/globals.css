@@ -99,3 +99,11 @@ body {
 .send-btn:hover {
   background-color: #004ecc;
 }
+
+.send-btn-container {
+  display: flex;
+  margin: 0 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
