@@ -8,6 +8,7 @@ import PromptSaver from "../components/PromptSaver";
 import { ThemeProvider } from "../components/ThemeContext";
 import ThemeSelector from "../components/ThemeSelector";
 import LLMControls from "@/components/LLMControls";
+import LLMPresetManager from "@/components/LLMPresetManager";
 
 import { useState, useEffect } from "react";
 
@@ -135,6 +136,18 @@ export default function Home() {
               presencePenalty={presencePenalty} onPresencePenaltyChange={setPresencePenalty}
               useStream={useStream} onStreamToggle={() => setUseStream(!useStream)}
             />
+
+            <LLMPresetManager
+              config={{ temperature, topP, maxTokens, presencePenalty, stream: useStream }}
+              onLoad={(preset) => {
+                setTemperature(preset.config.temperature);
+                setTopP(preset.config.topP);
+                setMaxTokens(preset.config.maxTokens);
+                setPresencePenalty(preset.config.presencePenalty);
+                setUseStream(preset.config.stream);
+              }}
+            />
+
   
             <ResponseViewer content={response} />
   
