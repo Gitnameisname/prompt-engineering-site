@@ -41,10 +41,7 @@ export default function ResponseViewer({ content }: Props) {
                 }}
                 {...props}
               >
-                <CopyableCodeBlock
-                language={language}
-                value={children}
-              />
+              {children}
               </code>
             ) : (
               <code className={className} {...props}>
