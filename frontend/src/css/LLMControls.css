@@ -14,6 +14,13 @@
     margin-bottom: 0.5rem;
 }
 
+.llm-controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
 .llm-tooltip-icon {
     margin-left: 6px;
     cursor: help;
@@ -49,4 +56,16 @@
     background: var(--card-bg);
     color: var(--foreground);
 }
-  
+
+.llm-reset-btn {
+    background: #3fcb56;
+    color: white;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.llm-reset-btn:hover {
+    background-color: #26b021;
+}

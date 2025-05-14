@@ -2,15 +2,23 @@
 
 import SystemPromptInput from "../components/SystemPromptInput";
 import UserPromptInput from "../components/UserPromptInput";
-import StreamToggle from "../components/StreamToggle";
 import ResponseViewer from "../components/ResponseViewer";
 import PromptSaver from "../components/PromptSaver";
 import { ThemeProvider } from "../components/ThemeContext";
 import ThemeSelector from "../components/ThemeSelector";
 import LLMControls from "@/components/LLMControls";
 import LLMPresetManager from "@/components/LLMPresetManager";
+import Footer from "@/components/Footer";
 
 import { useState, useEffect } from "react";
+
+const INITIAL_LLM_CONFIG = {
+  temperature: 0.7,
+  topP: 1,
+  presencePenalty: 0,
+  maxTokens: 2048,
+  useStream: true,
+};
 
 export default function Home() {
   const [systemPrompt, setSystemPrompt] = useState("");
@@ -28,6 +36,15 @@ export default function Home() {
     user: string;
     date: string;
   }[]>([]);
+
+  // LLM 하이퍼파리미터 설정 초기화 함수
+  function resetLLMConfig() {
+    setTemperature(INITIAL_LLM_CONFIG.temperature);
+    setTopP(INITIAL_LLM_CONFIG.topP);
+    setMaxTokens(INITIAL_LLM_CONFIG.maxTokens);
+    setPresencePenalty(INITIAL_LLM_CONFIG.presencePenalty);
+    setUseStream(INITIAL_LLM_CONFIG.useStream);
+  }
 
   // 초기 로드
   useEffect(() => {
@@ -135,6 +152,7 @@ export default function Home() {
               maxTokens={maxTokens} onMaxTokensChange={setMaxTokens}
               presencePenalty={presencePenalty} onPresencePenaltyChange={setPresencePenalty}
               useStream={useStream} onStreamToggle={() => setUseStream(!useStream)}
+              onReset={resetLLMConfig}
             />
 
             <LLMPresetManager
@@ -153,7 +171,9 @@ export default function Home() {
   
           </main>
         </div>
+        
       </div>
+      <Footer />
     </ThemeProvider>
   );
 }

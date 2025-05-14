@@ -12,6 +12,7 @@ type Props = {
     onMaxTokensChange: (value: number) => void;
     useStream: boolean;
     onStreamToggle: () => void;
+    onReset: () => void;
 };
 
 const MAX_TEMPERATURE = 2;
@@ -22,7 +23,7 @@ const MAX_PRESENCE_PENALTY = 2;
 const MIN_PRESENCE_PENALTY = -2;
 const MAX_TOKEN_LIMIT = 4096;
 const MIN_TOKEN_LIMIT = 1;
-  
+
 export default function LLMControls({
     temperature,
     onTemperatureChange,
@@ -34,6 +35,7 @@ export default function LLMControls({
     onMaxTokensChange,
     useStream,
     onStreamToggle,
+    onReset
     }: Props) {
 
     const [tempInput, setTempInput] = useState(temperature.toString());
@@ -49,211 +51,218 @@ export default function LLMControls({
     useEffect(() => setUseStreamInput(useStream), [useStream]);
 
     return (
-        <div className="llm-controls">
-            <div className="llm-controls-section">
-                <label className="llm-controls-label">
-                    Temperature
-                    <span className="llm-tooltip-icon" title="출력의 랜덤성. 높을수록 창의적, 낮을수록 결정적 응답.">💡</span>
-                </label>
-                <div className="llm-slider-group">
-                    <input
-                        type="range"
-                        min={MIN_TEMPERATURE}
-                        max={MAX_TEMPERATURE}
-                        step="0.01"
-                        value={temperature}
-                        onChange={(e) => onTemperatureChange(parseFloat(e.target.value))}
-                    />
-                    <input
-                        type="number"
-                        min={MIN_TEMPERATURE}
-                        max={MAX_TEMPERATURE}
-                        step="0.01"
-                        value={temperature}
-                        onChange={(e) => {
-                            const v = parseFloat(e.target.value);
-                            const safe = isNaN(v)
-                            ? MIN_TEMPERATURE 
-                            : Math.max(MIN_TEMPERATURE, Math.min(MAX_TEMPERATURE, v));
-                            onTemperatureChange(safe);
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                            const v = parseFloat(tempInput);
-                            const safe = isNaN(v)
-                                ? temperature
-                                : Math.max(MIN_TEMPERATURE, Math.min(MAX_TEMPERATURE, v));
-                            onTemperatureChange(safe);
-                            setTempInput(safe.toString());
-                            }
-                        }}
-                        onBlur={() => {
-                            const v = parseFloat(tempInput);
-                            const safe = isNaN(v)
-                                ? temperature
-                                : Math.max(MIN_TEMPERATURE, Math.min(MAX_TEMPERATURE, v));
-                            onTemperatureChange(safe);
-                            setTempInput(safe.toString());
-                        }}
-                        className="llm-number-input"
-                    />
-                </div>
+        <div>
+            <div className="llm-controls-header">
+                <h3>LLM 설정</h3>
+                <button className="llm-reset-btn" onClick={onReset}>초기화</button>
             </div>
-
-            <div className="llm-controls-section">
-                <label>
-                    Top-p
-                    <span className="llm-tooltip-icon" title="누적 확률 기반 토큰 필터링. 1.0이면 전체 사용.">💡</span>
-                </label>
-                <div className="llm-slider-group">
-                    <input
-                        type="range"
-                        min={MIN_TOP_P}
-                        max={MAX_TOP_P}
-                        step="0.01"
-                        value={topP}
-                        onChange={(e) => onTopPChange(parseFloat(e.target.value))}
-                    />
-                    <input
-                        type="number"
-                        min={MIN_TOP_P}
-                        max={MAX_TOP_P}
-                        step="0.01"
-                        value={topP}
-                        onChange={(e) => {
-                            const v = parseFloat(e.target.value);
-                            const safe = isNaN(v)
-                            ? MIN_TOP_P
-                            : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
-                            onTopPChange(safe);
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                            const v = parseFloat(topPInput);
-                            const safe = isNaN(v)
-                                ? topP
-                                : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
-                            onTopPChange(safe);
-                            setTopPInput(safe.toString());
-                            }
-                        }}
-                        onBlur={() => {
-                            const v = parseFloat(topPInput);
-                            const safe = isNaN(v)
-                                ? topP
-                                : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
-                            onTopPChange(safe);
-                            setTopPInput(safe.toString());
-                        }}
-                        className="llm-number-input"
-                    />
+            <div className="llm-controls">
+                <div className="llm-controls-section">
+                    <label className="llm-controls-label">
+                        Temperature
+                        <span className="llm-tooltip-icon" title="출력의 랜덤성. 높을수록 창의적, 낮을수록 결정적 응답.">💡</span>
+                    </label>
+                    <div className="llm-slider-group">
+                        <input
+                            type="range"
+                            min={MIN_TEMPERATURE}
+                            max={MAX_TEMPERATURE}
+                            step="0.01"
+                            value={temperature}
+                            onChange={(e) => onTemperatureChange(parseFloat(e.target.value))}
+                        />
+                        <input
+                            type="number"
+                            min={MIN_TEMPERATURE}
+                            max={MAX_TEMPERATURE}
+                            step="0.01"
+                            value={temperature}
+                            onChange={(e) => {
+                                const v = parseFloat(e.target.value);
+                                const safe = isNaN(v)
+                                ? MIN_TEMPERATURE 
+                                : Math.max(MIN_TEMPERATURE, Math.min(MAX_TEMPERATURE, v));
+                                onTemperatureChange(safe);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                const v = parseFloat(tempInput);
+                                const safe = isNaN(v)
+                                    ? temperature
+                                    : Math.max(MIN_TEMPERATURE, Math.min(MAX_TEMPERATURE, v));
+                                onTemperatureChange(safe);
+                                setTempInput(safe.toString());
+                                }
+                            }}
+                            onBlur={() => {
+                                const v = parseFloat(tempInput);
+                                const safe = isNaN(v)
+                                    ? temperature
+                                    : Math.max(MIN_TEMPERATURE, Math.min(MAX_TEMPERATURE, v));
+                                onTemperatureChange(safe);
+                                setTempInput(safe.toString());
+                            }}
+                            className="llm-number-input"
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <div className="llm-controls-section">
-                <label>
-                    Presence Penalty
-                    <span className="llm-tooltip-icon" title="응답 길이 제한. 너무 작으면 잘리며, 너무 크면 느려짐.">💡</span>
-                </label>
-                <div className="llm-slider-group">
-                    <input
-                        type="range"
-                        min={MIN_PRESENCE_PENALTY}
-                        max={MAX_PRESENCE_PENALTY}
-                        step="0.1"
-                        value={presencePenalty}
-                        onChange={(e) => onPresencePenaltyChange(parseFloat(e.target.value))}
-                    />
+                <div className="llm-controls-section">
+                    <label>
+                        Top-p
+                        <span className="llm-tooltip-icon" title="누적 확률 기반 토큰 필터링. 1.0이면 전체 사용.">💡</span>
+                    </label>
+                    <div className="llm-slider-group">
+                        <input
+                            type="range"
+                            min={MIN_TOP_P}
+                            max={MAX_TOP_P}
+                            step="0.01"
+                            value={topP}
+                            onChange={(e) => onTopPChange(parseFloat(e.target.value))}
+                        />
+                        <input
+                            type="number"
+                            min={MIN_TOP_P}
+                            max={MAX_TOP_P}
+                            step="0.01"
+                            value={topP}
+                            onChange={(e) => {
+                                const v = parseFloat(e.target.value);
+                                const safe = isNaN(v)
+                                ? MIN_TOP_P
+                                : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
+                                onTopPChange(safe);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                const v = parseFloat(topPInput);
+                                const safe = isNaN(v)
+                                    ? topP
+                                    : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
+                                onTopPChange(safe);
+                                setTopPInput(safe.toString());
+                                }
+                            }}
+                            onBlur={() => {
+                                const v = parseFloat(topPInput);
+                                const safe = isNaN(v)
+                                    ? topP
+                                    : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
+                                onTopPChange(safe);
+                                setTopPInput(safe.toString());
+                            }}
+                            className="llm-number-input"
+                        />
+                    </div>
+                </div>
+
+                <div className="llm-controls-section">
+                    <label>
+                        Presence Penalty
+                        <span className="llm-tooltip-icon" title="응답 길이 제한. 너무 작으면 잘리며, 너무 크면 느려짐.">💡</span>
+                    </label>
+                    <div className="llm-slider-group">
+                        <input
+                            type="range"
+                            min={MIN_PRESENCE_PENALTY}
+                            max={MAX_PRESENCE_PENALTY}
+                            step="0.1"
+                            value={presencePenalty}
+                            onChange={(e) => onPresencePenaltyChange(parseFloat(e.target.value))}
+                        />
+                        <input
+                            type="number"
+                            min={MIN_PRESENCE_PENALTY}
+                            max={MAX_PRESENCE_PENALTY}
+                            step="1"
+                            value={presencePenalty}
+                            onChange={(e) => {
+                                const v = parseFloat(e.target.value);
+                                const safe = isNaN(v)
+                                ? MIN_PRESENCE_PENALTY
+                                : Math.max(MIN_PRESENCE_PENALTY, Math.min(MAX_PRESENCE_PENALTY, v));
+                                onPresencePenaltyChange(safe);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                const v = parseFloat(presencePenaltyInput);
+                                const safe = isNaN(v)
+                                    ? MIN_TOP_P
+                                    : Math.max(MIN_PRESENCE_PENALTY, Math.min(MAX_TOP_P, v));
+                                onTopPChange(safe);
+                                setTopPInput(safe.toString());
+                                }
+                            }}
+                            onBlur={() => {
+                                const v = parseFloat(presencePenaltyInput);
+                                const safe = isNaN(v)
+                                    ? MIN_TOP_P
+                                    : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
+                                onTopPChange(safe);
+                                setTopPInput(safe.toString());
+                            }}
+                            className="llm-number-input"
+                        />
+                    </div>
+                </div>
+
+                <div className="llm-controls-section">
+                    <label>
+                        Max Tokens
+                        <span className="llm-tooltip-icon" title="등장한 단어에 페널티 부여. 새 주제 유도.">💡</span>
+                    </label>
                     <input
                         type="number"
-                        min={MIN_PRESENCE_PENALTY}
-                        max={MAX_PRESENCE_PENALTY}
+                        min={MIN_TOKEN_LIMIT}
+                        max={MAX_TOKEN_LIMIT}
                         step="1"
-                        value={presencePenalty}
+                        value={maxTokens}
                         onChange={(e) => {
                             const v = parseFloat(e.target.value);
                             const safe = isNaN(v)
-                            ? MIN_PRESENCE_PENALTY
-                            : Math.max(MIN_PRESENCE_PENALTY, Math.min(MAX_PRESENCE_PENALTY, v));
-                            onPresencePenaltyChange(safe);
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                            const v = parseFloat(presencePenaltyInput);
-                            const safe = isNaN(v)
-                                ? MIN_TOP_P
-                                : Math.max(MIN_PRESENCE_PENALTY, Math.min(MAX_TOP_P, v));
-                            onTopPChange(safe);
-                            setTopPInput(safe.toString());
-                            }
-                        }}
-                        onBlur={() => {
-                            const v = parseFloat(presencePenaltyInput);
-                            const safe = isNaN(v)
-                                ? MIN_TOP_P
-                                : Math.max(MIN_TOP_P, Math.min(MAX_TOP_P, v));
-                            onTopPChange(safe);
-                            setTopPInput(safe.toString());
+                            ? MIN_TOKEN_LIMIT
+                            : Math.max(MIN_TOKEN_LIMIT, Math.min(MAX_TOKEN_LIMIT, v));
+                            onMaxTokensChange(safe);
                         }}
                         className="llm-number-input"
                     />
                 </div>
-            </div>
 
-            <div className="llm-controls-section">
-                <label>
-                    Max Tokens
-                    <span className="llm-tooltip-icon" title="등장한 단어에 페널티 부여. 새 주제 유도.">💡</span>
-                </label>
-                <input
-                    type="number"
-                    min={MIN_TOKEN_LIMIT}
-                    max={MAX_TOKEN_LIMIT}
-                    step="1"
-                    value={maxTokens}
-                    onChange={(e) => {
-                        const v = parseFloat(e.target.value);
-                        const safe = isNaN(v)
-                         ? MIN_TOKEN_LIMIT
-                         : Math.max(MIN_TOKEN_LIMIT, Math.min(MAX_TOKEN_LIMIT, v));
-                        onMaxTokensChange(safe);
-                    }}
-                    className="llm-number-input"
-                />
-            </div>
-
-            <div className="llm-controls-section">
-                <span>
-                    스트리밍
-                    <span className="llm-tooltip-icon" title="응답을 실시간으로 점진적으로 출력. 대화형 UI에 적합.">💡</span>
-                </span>
-                <div
-                onClick={onStreamToggle}
-                style={{
-                    width: "50px",
-                    height: "28px",
-                    borderRadius: "9999px",
-                    backgroundColor: useStream ? "#4CAF50" : "#ccc",
-                    position: "relative",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s",
-                }}
-                >
-                <div
+                <div className="llm-controls-section">
+                    <span>
+                        스트리밍
+                        <span className="llm-tooltip-icon" title="응답을 실시간으로 점진적으로 출력. 대화형 UI에 적합.">💡</span>
+                    </span>
+                    <div
+                    onClick={onStreamToggle}
                     style={{
-                    position: "absolute",
-                    top: "3px",
-                    left: useStream ? "26px" : "3px",
-                    width: "22px",
-                    height: "22px",
-                    borderRadius: "50%",
-                    backgroundColor: "white",
-                    transition: "left 0.3s",
+                        width: "50px",
+                        height: "28px",
+                        borderRadius: "9999px",
+                        backgroundColor: useStream ? "#4CAF50" : "#ccc",
+                        position: "relative",
+                        cursor: "pointer",
+                        transition: "background-color 0.3s",
                     }}
-                    />
+                    >
+                    <div
+                        style={{
+                        position: "absolute",
+                        top: "3px",
+                        left: useStream ? "26px" : "3px",
+                        width: "22px",
+                        height: "22px",
+                        borderRadius: "50%",
+                        backgroundColor: "white",
+                        transition: "left 0.3s",
+                        }}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
+        
     );
 }
   
