@@ -11,6 +11,15 @@
     padding-bottom: 0.5rem;
 }
 
+.prompt-saver input {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--card-bg);
+    color: var(--foreground);
+}
+
 .prompt-list {
     display: flex;
     flex-direction: column;

@@ -33,7 +33,7 @@ type Props = {
       <div className="settings-sidebar">
         <div className="settings-header">
           <h2>설정</h2>
-          <button onClick={onClose}>닫기</button>
+          <button onClick={onClose} className="settings-btn">닫기</button>
         </div>
         <LLMControls
           temperature={config.temperature}

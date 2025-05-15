@@ -15,7 +15,6 @@ export default function ResponseViewer({ content }: Props) {
         background: "#333",
         padding: "1.5rem 2rem",
         borderRadius: "12px",
-        maxHeight: "400px",
         overflowY: "auto",
         overflowX: "auto",
         color: "#eee",

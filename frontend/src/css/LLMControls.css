@@ -60,12 +60,26 @@
 .llm-reset-btn {
     background: #3fcb56;
     color: white;
-    padding: 6px 12px;
+    padding: 6px 10px;
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background 0.2s ease;
 }
 .llm-reset-btn:hover {
     background-color: #26b021;
+}
+
+[data-theme="black"] .llm-reset-btn {
+    background: #34a547;
+    color: white;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+[data-theme="black"] .llm-reset-btn:hover {
+    background-color: #30d62a;
 }
