@@ -61,6 +61,12 @@ export default function LLMPresetManager({ config, onLoad }: Props) {
           value={presetName}
           onChange={(e) => setPresetName(e.target.value)}
           placeholder="프리셋 이름"
+          onKeyDown={(e) => {
+            if (e.shiftKey && e.key === "Enter") {
+                e.preventDefault(); // 줄바꿈 방지
+                savePreset();
+            }
+          }}
         />
         <button className="save-btn" onClick={savePreset}>저장</button>
       </div>

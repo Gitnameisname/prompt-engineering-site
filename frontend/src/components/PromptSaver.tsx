@@ -21,7 +21,7 @@ export default function PromptSaver({ current, savedPrompts, setSavedPrompts, on
 
   // 저장 함수
   function savePrompt() {
-    const trimmedName = promptName.trim() || "이름없는 프롬프트";
+    const trimmedName = promptName.trim() || `임시 프롬프트 ${savedPrompts.length + 1}`;
 
     const newItem: PromptItem = {
       id: Date.now(),
@@ -53,6 +53,12 @@ export default function PromptSaver({ current, savedPrompts, setSavedPrompts, on
         value={promptName}
         onChange={(e) => setPromptName(e.target.value)}
         className="prompt-name-input"
+        onKeyDown={(e) => {
+          if ( e.shiftKey && e.key === "Enter") {
+            e.preventDefault(); // 줄바꿈 방지
+            savePrompt();
+          }
+        }}
       />
       <button className="save-btn" onClick={savePrompt}>
         저장
