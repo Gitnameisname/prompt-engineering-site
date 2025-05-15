@@ -1,0 +1,22 @@
+.settings-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100%;
+    background: var(--background);
+    border-left: 1px solid var(--border);
+    box-shadow: -2px 0 6px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+  }
+  
+  .settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  

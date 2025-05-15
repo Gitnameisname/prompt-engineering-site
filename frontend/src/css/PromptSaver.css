@@ -50,40 +50,7 @@
     word-break: break-word;
 }
 
-/* 전송 버튼 */
-.save-btn {
-    background-color: #0066ff;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    margin: 0 5rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-  
-.save-btn:hover {
-    background-color: #004ecc;
-}
-
 .delete-btn-container {
     display: flex;
     justify-content: flex-end;
-}
-
-.delete-btn {
-    margin-top: 0.5rem;
-    align-items: flex-end;
-    background-color: #e03131;
-    border: 1px solid #e03131;
-    color: white;
-    font-size: 0.8rem;
-    padding: 4px 6px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.delete-btn:hover {
-    background-color: #ffbcbc;
-    color: #e03131;
 }

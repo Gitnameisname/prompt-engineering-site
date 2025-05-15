@@ -9,7 +9,7 @@ type Preset = {
     topP: number;
     maxTokens: number;
     presencePenalty: number;
-    stream: boolean;
+    useStream: boolean;
   };
 };
 
@@ -19,7 +19,7 @@ type Props = {
     topP: number;
     maxTokens: number;
     presencePenalty: number;
-    stream: boolean;
+    useStream: boolean;
   };
   onLoad: (preset: Preset) => void;
 };

@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 
 import SystemPromptInput from "../components/SystemPromptInput";
 import UserPromptInput from "../components/UserPromptInput";
@@ -6,15 +7,12 @@ import ResponseViewer from "../components/ResponseViewer";
 import PromptSaver from "../components/PromptSaver";
 import { ThemeProvider } from "../components/ThemeContext";
 import ThemeSelector from "../components/ThemeSelector";
-import LLMControls from "@/components/LLMControls";
-import LLMPresetManager from "@/components/LLMPresetManager";
+import SettingsSidebar from "@/components/SettingsSidebar";
 import Footer from "@/components/Footer";
-
-import { useState, useEffect } from "react";
 
 const INITIAL_LLM_CONFIG = {
   temperature: 0.7,
-  topP: 1,
+  topP: 0.6,
   presencePenalty: 0,
   maxTokens: 2048,
   useStream: true,
@@ -22,13 +20,15 @@ const INITIAL_LLM_CONFIG = {
 
 export default function Home() {
   const [systemPrompt, setSystemPrompt] = useState("");
-  const [prompt, setPrompt] = useState("");
+  const [userPrompt, setUserPrompt] = useState("");
+
   const [temperature, setTemperature] = useState(0.7);
   const [topP, setTopP] = useState(0.6);
   const [maxTokens, setMaxTokens] = useState(2048);
   const [presencePenalty, setPresencePenalty] = useState(0);
   const [response, setResponse] = useState("");
   const [useStream, setUseStream] = useState(true);
+
   const [savedPrompts, setSavedPrompts] = useState<{
     id: number;
     name: string;
@@ -37,12 +37,14 @@ export default function Home() {
     date: string;
   }[]>([]);
 
+  const [showSettings, setShowSettings] = useState(false);
+
   // LLM 하이퍼파리미터 설정 초기화 함수
   function resetLLMConfig() {
     setTemperature(INITIAL_LLM_CONFIG.temperature);
     setTopP(INITIAL_LLM_CONFIG.topP);
-    setMaxTokens(INITIAL_LLM_CONFIG.maxTokens);
     setPresencePenalty(INITIAL_LLM_CONFIG.presencePenalty);
+    setMaxTokens(INITIAL_LLM_CONFIG.maxTokens);
     setUseStream(INITIAL_LLM_CONFIG.useStream);
   }
 
@@ -123,13 +125,18 @@ export default function Home() {
         {/* 헤더 */}
         <header className="header">
           <h1>프롬프트 엔지니어링 놀이터</h1>
-          <ThemeSelector />
+          <div className="settings-container">
+            <ThemeSelector />
+            <button className="settings-btn" onClick={() => setShowSettings(true)}>
+              설정
+            </button>
+          </div>
         </header>
         {/* 좌측: 저장된 프롬프트 / 중앙: 입력창 및 응답 */}
         <div className="layout">
           <aside className="sidebar">
             <PromptSaver
-              current={{ system: systemPrompt, user: prompt }}
+              current={{ system: systemPrompt, user: "" }}
               savedPrompts={savedPrompts}
               setSavedPrompts={setSavedPrompts}
               onLoad={(system) => {
@@ -139,37 +146,31 @@ export default function Home() {
           </aside>
           <main className="main">
             <SystemPromptInput value={systemPrompt} onChange={setSystemPrompt} sendPrompt={sendPrompt} />
-            <UserPromptInput value={prompt} onChange={setPrompt} sendPrompt={sendPrompt} />
+            <UserPromptInput value={userPrompt} onChange={setUserPrompt} sendPrompt={sendPrompt} />
             
             <div className="send-btn-container">
               <p className="hint-text">Shift + Enter 를 눌러 전송할 수 있습니다.</p>
               <button className="send-btn" onClick={sendPrompt}>전송</button>
             </div>
-            
-            <LLMControls
-              temperature={temperature} onTemperatureChange={setTemperature}
-              topP={topP} onTopPChange={setTopP}
-              maxTokens={maxTokens} onMaxTokensChange={setMaxTokens}
-              presencePenalty={presencePenalty} onPresencePenaltyChange={setPresencePenalty}
-              useStream={useStream} onStreamToggle={() => setUseStream(!useStream)}
-              onReset={resetLLMConfig}
-            />
-
-            <LLMPresetManager
-              config={{ temperature, topP, maxTokens, presencePenalty, stream: useStream }}
-              onLoad={(preset) => {
-                setTemperature(preset.config.temperature);
-                setTopP(preset.config.topP);
-                setMaxTokens(preset.config.maxTokens);
-                setPresencePenalty(preset.config.presencePenalty);
-                setUseStream(preset.config.stream);
-              }}
-            />
-
   
             <ResponseViewer content={response} />
   
           </main>
+          {/* 우측: LLM 하이퍼파라미터 설정 */}
+          {showSettings && (
+            <SettingsSidebar
+              onClose={() => setShowSettings(false)}
+              config={{ temperature, topP, presencePenalty, maxTokens, useStream }}
+              onChange={{
+                setTemperature,
+                setTopP,
+                setMaxTokens,
+                setPresencePenalty,
+                setUseStream,
+              }}
+              resetToDefault={resetLLMConfig}
+              />
+          )}
         </div>
         
       </div>

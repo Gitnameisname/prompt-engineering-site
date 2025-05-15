@@ -4,6 +4,7 @@
   
 .preset-save {
     display: flex;
+    justify-content: space-between;
     gap: 0.5rem;
     margin-bottom: 1rem;
 }
@@ -40,87 +41,4 @@
   
 .preset-actions button {
     margin-left: 0.5rem;
-}
-
-/* 저장 버튼 */
-.save-btn {
-  background-color: #0066ff;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 4px;
-  margin-top: 1rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.save-btn:hover {
-  background-color: #004ecc;
-}
-
-/* 저장 버튼 */
-.save-btn {
-  background-color: #0066ff;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 4px;
-  margin-top: 1rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.save-btn:hover {
-  background-color: #004ecc;
-}
-
-/* 불러오기 버튼 */
-.load-btn {
-  align-items: flex-end;
-  background-color: white;
-  border: 1px solid #333333;
-  color: var(--foreground);
-  font-size: 0.8rem;
-  padding: 4px 6px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.load-btn:hover {
-  background-color: #ffbcbc;
-  color: #e03131;
-}
-
-[data-theme="black"] .load-btn {
-  align-items: flex-end;
-  background-color: #e03131;
-  border: 1px solid #e03131;
-  color: white;
-  font-size: 0.8rem;
-  padding: 4px 6px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-[data-theme="black"] .load-btn:hover {
-  background-color: #ffbcbc;
-  color: #e03131;
-}
-
-/* 삭제 버튼 */
-.delete-btn {
-  margin-top: 0;
-  align-items: flex-end;
-  background-color: #e03131;
-  border: 1px solid #e03131;
-  color: white;
-  font-size: 0.8rem;
-  padding: 4px 6px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.delete-btn:hover {
-  background-color: #ffbcbc;
-  color: #e03131;
 }

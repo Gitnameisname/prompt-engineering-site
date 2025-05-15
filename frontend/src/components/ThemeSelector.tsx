@@ -4,7 +4,7 @@ export default function ThemeSelector() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div style={{ marginBottom: "1rem" }}>
+    <div>
       <label style={{ marginRight: "0.5rem" }}>테마 선택:</label>
       <select
         value={theme}
