@@ -5,7 +5,10 @@ import httpx
 import os
 import json
 
+from LogManager import LogManager
+
 app = FastAPI()
+logManager = LogManager()
 
 # CORS 허용 (필요시 조정)
 app.add_middleware(
@@ -27,8 +30,8 @@ headers = {
 @app.post("/api/chat")
 async def chat(request: Request):
     body = await request.json()
-    stream = body.get("stream", False)
-    print(f"stream: {stream}")
+    stream = body.get("stream", True)
+    logManager.log_info(f"Request Body: \n{body}")
 
     if not stream:
         # 비스트리밍 요청
@@ -40,10 +43,17 @@ async def chat(request: Request):
         async def event_stream():
             async with httpx.AsyncClient(timeout=None) as client:
                 async with client.stream("POST", OPENAI_API_URL, headers=headers, json=body) as resp:
+                    ai_response = ""
                     async for line in resp.aiter_lines():
                         if line.strip() == "":
                             continue
                         if line.startswith("data: "):
+                            if line == "data: [DONE]":
+                                break
+                            tmp_response = json.loads(line[6:]).get("choices", [{}])[0].get("delta", {}).get("content", "")
+                            ai_response += tmp_response
                             yield line + "\n"
+
+                    logManager.log_info(f"AI Response:\n{ai_response}")
 
         return StreamingResponse(event_stream(), media_type="text/event-stream")

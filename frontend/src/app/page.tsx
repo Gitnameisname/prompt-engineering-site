@@ -63,7 +63,7 @@ export default function Home() {
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user", content: prompt },
+        { role: "user", content: userPrompt },
       ],
       temperature: temperature,
       top_p: topP,
@@ -172,7 +172,6 @@ export default function Home() {
               />
           )}
         </div>
-        
       </div>
       <Footer />
     </ThemeProvider>
